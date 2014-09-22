@@ -1,5 +1,6 @@
 var css = require('./css')
   , less = require('./less')
+  , sass = require('./sass')
   , fs = require('fs')
   , path = require('path')
   , mkdirp = require('mkdirp')
@@ -9,13 +10,20 @@ module.exports = function (opts, cb) {
   if (typeof opts === 'string') opts = {entry: opts};
   if (typeof cb === 'string') opts.output = cb;
 
-  if (opts.entry.substr(-4) === 'less') {
-    less(opts, complete)
-  } else {
-    css(opts, complete)
+  switch(opts.entry.substr(-4)) {
+    case 'less':
+      less(opts, complete)
+      break
+    case 'sass':
+      sass(opts, complete)
+      break
+    default:
+      css(opts, complete)
+      break
   }
 
   function complete (err, src) {
+    console.log(src)
     if (opts.transform && !err) src = opts.transform(src)
 
     if (opts.output) {

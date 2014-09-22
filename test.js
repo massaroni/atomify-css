@@ -4,6 +4,7 @@ var test = require('tape')
   , css = require('./')
   , cssFixtures = __dirname + '/test/fixtures/css/'
   , lessFixtures = __dirname + '/test/fixtures/less/'
+  , sassFixtures = __dirname + '/test/fixtures/sass/'
 
 test('basic css bundling', function (t) {
   t.plan(1)
@@ -21,6 +22,17 @@ test('basic less bundling', function (t) {
 
   var cfg = { entry: path.join(lessFixtures, 'entry.less') }
     , correct = fs.readFileSync(path.join(lessFixtures, 'bundle.css'), 'utf8')
+
+  css(cfg, function (err, src) {
+    t.equal(src, correct)
+  })
+})
+
+test('basic sass bundling', function (t) {
+  t.plan(1)
+
+  var cfg = { entry: path.join(sassFixtures, 'entry.sass') }
+    , correct = fs.readFileSync(path.join(sassFixtures, 'bundle.css'), 'utf8')
 
   css(cfg, function (err, src) {
     t.equal(src, correct)
@@ -187,6 +199,23 @@ test('opts.assets for LESS', function (t) {
     t.equal(src, correct)
   })
 })
+
+//test('opts.assets for SCSS', function (t) {
+//  t.plan(1)
+//
+//  var cfg = {
+//      entry: path.join(scssFixtures, 'entry-with-asset.scss')
+//      , assets: {
+//        dest: path.join(scssFixtures, 'assets/images')
+//        , prefix: 'assets/images/'
+//      }
+//    }
+//    , correct = fs.readFileSync(path.join(scssFixtures, 'bundle-with-asset.css'), 'utf8')
+//
+//  css(cfg, function (err, src) {
+//    t.equal(src, correct)
+//  })
+//})
 
 test('plugins are configurable', function (t) {
   t.plan(1)
