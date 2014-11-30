@@ -1,3 +1,5 @@
+'use strict';
+
 var css = require('./css')
   , less = require('./less')
   , fs = require('fs')
@@ -9,8 +11,9 @@ var css = require('./css')
 module.exports = function (opts, cb) {
   if (typeof opts === 'string') opts = {entry: opts};
   if (typeof cb === 'string') opts.output = cb;
+  if (opts.entry) opts.entries = [opts.entry];
 
-  if (opts.entry.substr(-4) === 'less') {
+  if (opts.entry && opts.entry.substr(-4) === 'less') {
     less(opts, complete)
   } else if (opts.entry.substr(-4) === 'scss') {
     sass(opts, complete)

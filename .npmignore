@@ -1,1 +1,13 @@
 test
+
+
+.git*
+.npmignore
+.travis.yml
+test.js
+
+.editorconfig
+.jscsrc
+.jshint*
+CHANGELOG.*
+CONTRIBUTING.*
