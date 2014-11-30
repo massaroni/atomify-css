@@ -1,3 +1,5 @@
+'use strict';
+
 var css = require('./css')
   , less = require('./less')
   , sass = require('./sass')
@@ -9,6 +11,7 @@ var css = require('./css')
 module.exports = function (opts, cb) {
   if (typeof opts === 'string') opts = {entry: opts};
   if (typeof cb === 'string') opts.output = cb;
+  if (opts.entry) opts.entries = [opts.entry];
 
   switch(opts.entry.substr(-4)) {
     case 'less':
