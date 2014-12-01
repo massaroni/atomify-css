@@ -3,6 +3,7 @@
 var test = require('tape')
     , fs = require('fs')
     , path = require('path')
+    , sassUtils = require('./sassUtils')
     , css = require('./')
     , cssFixtures = __dirname + '/test/fixtures/css/'
     , lessFixtures = __dirname + '/test/fixtures/less/'
@@ -12,6 +13,36 @@ var test = require('tape')
 buildbower(runTests)
 
 function runTests() {
+
+  test('not a partial scss filename, regular scss filename', function (t) {
+    t.plan(1)
+
+    t.ok(!sassUtils.isPartialFilename('/dir/name.scss'))
+  })
+
+  test('not a partial scss filename, not an scss filename', function (t) {
+    t.plan(1)
+
+    t.ok(!sassUtils.isPartialFilename('/dir/name.css'))
+  })
+
+  test('not a partial scss filename, not an sass filename', function (t) {
+    t.plan(1)
+
+    t.ok(!sassUtils.isPartialFilename('/dir/name.sass'))
+  })
+
+  test('a partial scss filename', function (t) {
+    t.plan(1)
+
+    t.ok(sassUtils.isPartialFilename('/dir/_name.scss'))
+  })
+
+  test('a partial sass filename', function (t) {
+    t.plan(1)
+
+    t.ok(sassUtils.isPartialFilename('/dir/_name.sass'))
+  })
 
     test('basic css bundling', function (t) {
         t.plan(2)
