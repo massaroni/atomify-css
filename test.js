@@ -4,6 +4,7 @@ var test = require('tape')
     , fs = require('fs')
     , path = require('path')
     , sassUtils = require('./sassUtils')
+    , preconditions = require('./preconditions')
     , css = require('./')
     , cssFixtures = __dirname + '/test/fixtures/css/'
     , lessFixtures = __dirname + '/test/fixtures/less/'
@@ -42,6 +43,22 @@ function runTests() {
     t.plan(1)
 
     t.ok(sassUtils.isPartialFilename('/dir/_name.sass'))
+  })
+
+  test('preconditions errors should start with Atomify-CSS', function (t) {
+    t.plan(1)
+
+    t.throws(function () {
+      preconditions.check(false, 'test error');
+    }, /Atomify-CSS.*/)
+  })
+
+  test('preconditions checks should approve true conditions', function (t) {
+    t.plan(1)
+
+    t.doesNotThrow(function () {
+      preconditions.check(true, 'testing preconditions');
+    })
   })
 
     test('basic css bundling', function (t) {
