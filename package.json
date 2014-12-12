@@ -37,7 +37,6 @@
     "rework-bower": "^0.0.1",
     "rework-npm": "^1.0.0",
     "rework-vars": "^3.1.1",
-    "underscore": "^1.7.0",
     "write-to-path": "^1.0.0"
   },
   "devDependencies": {
