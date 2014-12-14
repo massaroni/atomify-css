@@ -1,49 +1,49 @@
-var sass = require('node-sass/sass')
+var sass = require('node-sass')
+  , sassUtil = require('./sassUtils')
+  , utils = require('./utils')
+  , preconditions = require('./preconditions')
 
-module.exports = function(opts, cb) {
-  sass.render({
-    file: '/Users/pivotal/workspace/atomify-css/test/fixtures/sass/entry.sass',
-    success: function(css) {
-      console.log(css)
-      cb(undefined, css)
-    },
-    error: function(data) {
-      console.log(data);
+var ctor = module.exports = function (opts, cb) {
+  preconditions.check(!!opts, 'Undefined options');
+  preconditions.check(utils.isArray(opts.entries), 'Expected entries array but was %s', opts.entries);
 
+  var compiled = []
+  var error = null
+
+  var compilable = opts.entries.filter(sassUtil.isCompilableFilePath)
+
+  if (compilable.length < 1) {
+    process.nextTick(function () {cb(null, null)})
+    return;
+  }
+
+  opts.entries.forEach(compile)
+
+  function compile (entryPath) {
+    if (error !== null) {
+      return
     }
-  })
-}
 
-//  , path = require('path')
-//  , events = require('events')
-//  , resrc = require('resrcify/custom').resrc
-//  , regexp = /url\([\"\'](.*?)[\"\']\)/g
-//  , res
-//  , assetsConfig
+    sass.render({
+      file: entryPath,
+      success: bufferCss,
+      error: fail,
+      outputStyle: opts.compress ? 'compressed' : 'nested'
+    });
+  }
 
+  function fail (err) {
+    error = err
+    process.nextTick(function () {cb(err)})
+  }
 
+  function bufferCss (css) {
+    compiled.push(css)
 
+    if (compiled.length >= compilable.length) {
+      var allSrc = compiled.join(opts.compress ? '' : '\n')
+      process.nextTick(function () {cb(null, allSrc)})
+    }
+  }
 
-//var ctor = module.exports = function (opts, cb) {
-//  assetsConfig = opts.assets
-//
-//  sass.render(path.resolve(process.cwd(), opts.entry), {preprocess: preprocess}, function (err, output) {
-//    if (err) return process.nextTick(function () { cb(err) })
-//
-//    process.nextTick(function() { cb(null, output.toCSS(opts)) })
-//  })
-//}
-//
-//ctor.emitter = new events.EventEmitter()
-//
-//function preprocess (file, src) {
-//  ctor.emitter.emit('file', file)
-//
-//  if (!assetsConfig) return src
-//
-//  while ((res = regexp.exec(src)) !== null) {
-//    src = src.replace(res[1], resrc(res[1], file, assetsConfig))
-//  }
-//
-//  return src
-//}
+};
