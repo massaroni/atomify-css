@@ -9,6 +9,7 @@ var test = require('tape')
     , cssFixtures = __dirname + '/test/fixtures/css/'
     , lessFixtures = __dirname + '/test/fixtures/less/'
     , sassFixtures = __dirname + '/test/fixtures/sass/'
+    , scssFixtures = __dirname + '/test/fixtures/scss/'
     , buildbower = require('./buildbower')
 
 buildbower(runTests)
@@ -121,7 +122,18 @@ function runTests() {
       })
     })
 
-    test('compiles variables', function (t) {
+    test('basic scss bundling', function (t) {
+      t.plan(1)
+
+      var cfg = { entry: path.join(scssFixtures, 'entry.scss') }
+        , correct = fs.readFileSync(path.join(scssFixtures, 'bundle.css'), 'utf8')
+
+      css(cfg, function (err, src) {
+        t.equal(src, correct)
+      })
+    })
+
+  test('compiles variables', function (t) {
         t.plan(2)
 
         var cfg = { entry: path.join(cssFixtures, 'vars.css') }
