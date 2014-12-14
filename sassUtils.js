@@ -4,6 +4,7 @@ var path = require('path')
 
 module.exports = {
   isSassFilePath: isSassFilePath,
+  isCompilableFilePath: isCompilableFilePath,
   isPartialFilename: isPartialFilename
 }
 
@@ -23,4 +24,13 @@ function isPartialFilename (fullpath) {
 
   var filename = path.basename(fullpath)
   return filename.length > 0 && filename[0] === '_'
+}
+
+/**
+ * "entry" files are compilable.
+ *
+ * @param fullPath
+ */
+function isCompilableFilePath (fullPath) {
+  return isSassFilePath(fullPath) && !isPartialFilename(fullPath);
 }

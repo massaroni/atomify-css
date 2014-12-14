@@ -15,6 +15,31 @@ buildbower(runTests)
 
 function runTests() {
 
+  test('compilable scss filename', function (t) {
+    t.plan(1)
+    t.ok(sassUtils.isCompilableFilePath('/dir/name.scss'))
+  })
+
+  test('not compilable scss filename (partial)', function (t) {
+    t.plan(1)
+    t.ok(!sassUtils.isCompilableFilePath('/dir/_name.scss'))
+  })
+
+  test('not compilable scss filename (css)', function (t) {
+    t.plan(1)
+    t.ok(!sassUtils.isCompilableFilePath('/dir/name.css'))
+  })
+
+  test('compilable scss filename (no directory)', function (t) {
+    t.plan(1)
+    t.ok(sassUtils.isCompilableFilePath('name.scss'))
+  })
+
+  test('not compilable scss filename (not extension)', function (t) {
+    t.plan(1)
+    t.ok(!sassUtils.isCompilableFilePath('/dir/namescss'))
+  })
+
   test('not a partial scss filename, regular scss filename', function (t) {
     t.plan(1)
 
