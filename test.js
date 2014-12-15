@@ -133,6 +133,17 @@ function runTests() {
       })
     })
 
+  test('scss bundling with local import', function (t) {
+    t.plan(1)
+
+    var cfg = { entry: path.join(scssFixtures, 'entry-with-import.scss') }
+      , correct = fs.readFileSync(path.join(scssFixtures, 'bundle-with-import.css'), 'utf8')
+
+    css(cfg, function (err, src) {
+      t.equal(src, correct)
+    })
+  })
+
   test('compiles variables', function (t) {
         t.plan(2)
 
