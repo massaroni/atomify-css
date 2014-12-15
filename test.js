@@ -158,6 +158,17 @@ function runTests() {
     })
   })
 
+  test('glob all scss files', function (t) {
+    t.plan(1)
+
+    var cfg = { entry: path.join(scssFixtures, 'globtest/**/*.scss') }
+      , correct = fs.readFileSync(path.join(scssFixtures, 'globtest/bundle-glob.css'), 'utf8')
+
+    css(cfg, function (err, src) {
+      t.equal(src, correct)
+    })
+  })
+
   test('compiles variables', function (t) {
         t.plan(2)
 

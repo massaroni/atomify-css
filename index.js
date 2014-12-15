@@ -9,22 +9,27 @@ var css = require('./css')
   , mkdirp = require('mkdirp')
   , writer = require('write-to-path')
   , clone = require('clone')
+  , glob = require('glob')
 
 module.exports = function (opts, cb) {
   if (typeof opts === 'string') opts = {entry: opts};
   if (typeof cb === 'string') opts.output = cb;
-  if (opts.entry) opts.entries = [opts.entry];
 
-  var compiled = []
-  var error = null
-  var compilers = 3
+  try {
+    var entryFiles = resolveEntryFiles()
+    var compiled = []
+    var error = null
+    var compilers = 3
 
-  compile(less, isLessFilename)
-  compile(css, isCssFilename)
-  compile(sass, sassUtils.isCompilableFilePath)
+    compile(less, isLessFilename)
+    compile(css, isCssFilename)
+    compile(sass, sassUtils.isCompilableFilePath)
+  } catch (e) {
+    cb(e, null)
+  }
 
   function compile (compilerFn, entryFilterFn) {
-    var compilable = opts.entries.filter(entryFilterFn)
+    var compilable = entryFiles.filter(entryFilterFn)
 
     if (compilable.length < 1) {
       bufferCss()
@@ -33,7 +38,7 @@ module.exports = function (opts, cb) {
 
     var newopts = clone(opts)
     newopts.entries = compilable
-    compilerFn(opts, bufferCss)
+    compilerFn(newopts, bufferCss)
   }
 
   function bufferCss (err, src) {
@@ -90,5 +95,32 @@ module.exports = function (opts, cb) {
 
   function isCssFilename (filename) {
     return typeof filename === 'string' && !isLessFilename(filename) && !sassUtils.isSassFilePath(filename);
+  }
+
+  function resolveEntryFiles () {
+    var patterns = opts.entries || []
+    if (opts.entry) patterns.push(opts.entry)
+
+    if (patterns.length < 1) {
+      throw new Error('atomify-css: no entry files')
+    }
+
+    var files = [];
+    patterns.forEach(function (pattern) {
+      try {
+        var matchingFiles = glob.sync(pattern);
+        Array.prototype.push.apply(files, matchingFiles)
+      } catch (e) {
+        console.log('atomify-css error resolving entry files for pattern:', pattern)
+        console.log(patterns)
+        console.log(e)
+      }
+    })
+
+    if (files.length < 1) {
+      throw new Error('atomify-css: no entry files for patterns: ' + JSON.stringify(patterns))
+    }
+
+    return files
   }
 }
