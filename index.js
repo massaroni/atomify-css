@@ -105,12 +105,15 @@ module.exports = function (opts, cb) {
       throw new Error('atomify-css: no entry files')
     }
 
+    // workaround for glob-array order sensitivity
+    var sortedPatterns = patterns.sort(exclusionGlobPatternComparator)
+
     var files = []
     try {
-      files = glob.sync(patterns);
+      files = glob.sync(sortedPatterns);
     } catch (e) {
       console.log('atomify-css error resolving entry files for pattern:', patterns)
-      console.log(patterns, patterns)
+      console.log(patterns, sortedPatterns)
       console.log(e)
       throw e
     }
@@ -120,5 +123,11 @@ module.exports = function (opts, cb) {
     }
 
     return files
+  }
+
+  function exclusionGlobPatternComparator (p1, p2) {
+    if (p1[0] === '!') return 1
+    if (p2[0] === '!') return -1
+    return 0
   }
 }

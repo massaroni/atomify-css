@@ -183,6 +183,20 @@ function runTests() {
     })
   })
 
+  test('observe glob exclusion patterns ordered before inclusion patterns', function (t) {
+    t.plan(1)
+
+    var cfg = { entries: [
+        '!' + path.join(scssFixtures, '/**/entry-with-import.scss'),
+        path.join(scssFixtures, 'globtest/**/*.scss')
+      ]}
+      , correct = fs.readFileSync(path.join(scssFixtures, 'globtest/bundle-entry.css'), 'utf8')
+
+    css(cfg, function (err, src) {
+      t.equal(src, correct)
+    })
+  })
+
   test('compiles variables', function (t) {
         t.plan(2)
 
