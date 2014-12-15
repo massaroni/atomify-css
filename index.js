@@ -25,7 +25,7 @@ module.exports = function (opts, cb) {
     compile(css, isCssFilename)
     compile(sass, sassUtils.isCompilableFilePath)
   } catch (e) {
-    cb(e, null)
+    if (typeof cb === 'function') cb(e, null)
   }
 
   function compile (compilerFn, entryFilterFn) {
