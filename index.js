@@ -9,7 +9,7 @@ var css = require('./css')
   , mkdirp = require('mkdirp')
   , writer = require('write-to-path')
   , clone = require('clone')
-  , glob = require('glob')
+  , glob = require('glob-array')
 
 module.exports = function (opts, cb) {
   if (typeof opts === 'string') opts = {entry: opts};
@@ -105,17 +105,15 @@ module.exports = function (opts, cb) {
       throw new Error('atomify-css: no entry files')
     }
 
-    var files = [];
-    patterns.forEach(function (pattern) {
-      try {
-        var matchingFiles = glob.sync(pattern);
-        Array.prototype.push.apply(files, matchingFiles)
-      } catch (e) {
-        console.log('atomify-css error resolving entry files for pattern:', pattern)
-        console.log(patterns)
-        console.log(e)
-      }
-    })
+    var files = []
+    try {
+      files = glob.sync(patterns);
+    } catch (e) {
+      console.log('atomify-css error resolving entry files for pattern:', patterns)
+      console.log(patterns, patterns)
+      console.log(e)
+      throw e
+    }
 
     if (files.length < 1) {
       throw new Error('atomify-css: no entry files for patterns: ' + JSON.stringify(patterns))
