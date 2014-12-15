@@ -34,6 +34,7 @@ var ctor = module.exports = function (opts, cb) {
   }
 
   function fail (err) {
+    console.log(err);
     error = err
     process.nextTick(function () {cb(err)})
   }
