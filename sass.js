@@ -28,6 +28,7 @@ var ctor = module.exports = function (opts, cb) {
       file: entryPath,
       success: bufferCss,
       error: fail,
+      includePaths: opts.includePaths,
       outputStyle: opts.compress ? 'compressed' : 'nested'
     });
   }

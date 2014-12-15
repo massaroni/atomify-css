@@ -144,6 +144,20 @@ function runTests() {
     })
   })
 
+  test('scss bundling with external import', function (t) {
+    t.plan(1)
+
+    var cfg = {
+        entry: path.join(scssFixtures, 'entry-with-external-import.scss'),
+        includePaths: [ 'test/fixtures/scss-external' ]
+      }
+      , correct = fs.readFileSync(path.join(scssFixtures, 'bundle-with-external-import.css'), 'utf8')
+
+    css(cfg, function (err, src) {
+      t.equal(src, correct)
+    })
+  })
+
   test('compiles variables', function (t) {
         t.plan(2)
 

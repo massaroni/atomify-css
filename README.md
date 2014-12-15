@@ -37,6 +37,8 @@ While you may use atomify-css with CSS or LESS, you cannot combine them in the s
 
 **opts.variables** - An object hash or a JSON file path that will be provided to [rework-vars](https://github.com/reworkcss/rework-vars) to replace any vars defined in your CSS.
 
+**opts.includePaths** - An array of string directory paths that will be provided to [node-sass](https://github.com/sass/node-sass) as additional directories to search for @import'ed files.
+
 **opts.plugins** - An array of Rework plugins to `use()` in addition to the defaults listed above.
 
 **opts.debug** or **opts.sourcemap** - Passed to the `toString()` method of Rework to generate source maps if `true`. Also provides additional CLI output, if applicable.
