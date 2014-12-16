@@ -33,11 +33,11 @@ While you may use atomify-css with CSS or LESS, you cannot combine them in the s
 
 **opts.output** - If you simply want your bundle written out to a file, provide the path in this property. Note that your `callback` will NOT be called if this property is present. Path will be resolved relative to `process.cwd()`.
 
+**opts.sass** - An object hash that will be provided to the [node-sass](https://github.com/sass/node-sass) render() function, so that you can pass in any options supported by node-sass. These properties are reserved for use by atomify-css: success, error, file, data, outputStyle.
+
 ### opts for CSS workflows
 
 **opts.variables** - An object hash or a JSON file path that will be provided to [rework-vars](https://github.com/reworkcss/rework-vars) to replace any vars defined in your CSS.
-
-**opts.includePaths** - An array of string directory paths that will be provided to [node-sass](https://github.com/sass/node-sass) as additional directories to search for @import'ed files.
 
 **opts.plugins** - An array of Rework plugins to `use()` in addition to the defaults listed above.
 

@@ -2,6 +2,7 @@ var sass = require('node-sass')
   , sassUtil = require('./sassUtils')
   , utils = require('./utils')
   , preconditions = require('./preconditions')
+  , clone = require('clone')
 
 var ctor = module.exports = function (opts, cb) {
   preconditions.check(!!opts, 'Undefined options');
@@ -9,6 +10,7 @@ var ctor = module.exports = function (opts, cb) {
 
   var compiled = []
   var error = null
+  var sassOpts = opts.sass || {}
 
   var compilable = opts.entries.filter(sassUtil.isCompilableFilePath)
 
@@ -24,13 +26,14 @@ var ctor = module.exports = function (opts, cb) {
       return
     }
 
-    sass.render({
-      file: entryPath,
-      success: bufferCss,
-      error: fail,
-      includePaths: opts.includePaths,
-      outputStyle: opts.compress ? 'compressed' : 'nested'
-    });
+    var sassConfig = clone(sassOpts)
+    sassConfig.file = entryPath
+    sassConfig.data = null
+    sassConfig.success = bufferCss
+    sassConfig.error = fail
+    sassConfig.outputStyle = opts.compress ? 'compressed' : 'nested'
+
+    sass.render(sassConfig);
   }
 
   function fail (err) {

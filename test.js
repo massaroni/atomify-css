@@ -149,7 +149,7 @@ function runTests() {
 
     var cfg = {
         entry: path.join(scssFixtures, 'entry-with-external-import.scss'),
-        includePaths: [ 'test/fixtures/scss-external' ]
+        sass: { includePaths: [ 'test/fixtures/scss-external' ] }
       }
       , correct = fs.readFileSync(path.join(scssFixtures, 'bundle-with-external-import.css'), 'utf8')
 
