@@ -122,7 +122,44 @@ function runTests() {
       })
     })
 
-    test('basic scss bundling', function (t) {
+  test('basic sass bundling with success callback', function (t) {
+    t.plan(2)
+
+    var correct = fs.readFileSync(path.join(sassFixtures, 'bundle.css'), 'utf8')
+    var cfg = {
+      entry: path.join(sassFixtures, 'entry.sass'),
+      sass: {
+        success: function (css) {
+          t.equal(css, correct)
+        }
+      }
+    }
+
+    css(cfg, function (err, src) {
+      t.equal(src, correct)
+    })
+  })
+
+  test('basic sass bundling with error callback', function (t) {
+    t.plan(2)
+
+    var correct = fs.readFileSync(path.join(sassFixtures, 'bundle.css'), 'utf8')
+    var cfg = {
+      entry: path.join(sassFixtures, 'entry-malformed.sass'),
+      sass: {
+        error: function (err) {
+          console.log(err)
+          t.ok(!!err, 'called sass option error callback')
+        }
+      }
+    }
+
+    css(cfg, function (err) {
+      t.ok(!!err, 'called atomify callback with error')
+    })
+  })
+
+  test('basic scss bundling', function (t) {
       t.plan(1)
 
       var cfg = { entry: path.join(scssFixtures, 'entry.scss') }

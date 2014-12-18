@@ -33,7 +33,7 @@ While you may use atomify-css with CSS or LESS, you cannot combine them in the s
 
 **opts.output** - If you simply want your bundle written out to a file, provide the path in this property. Note that your `callback` will NOT be called if this property is present. Path will be resolved relative to `process.cwd()`.
 
-**opts.sass** - An object hash that will be provided to the [node-sass](https://github.com/sass/node-sass) render() function, so that you can pass in any options supported by node-sass. These properties are reserved for use by atomify-css: success, error, file, data, outputStyle.
+**opts.sass** - An object hash that will be provided to the [node-sass](https://github.com/sass/node-sass) render() function, so that you can pass in any options supported by node-sass. These properties are reserved for use by atomify-css, so the configured values will be ignored: file, data, outputStyle.
 
 ### opts for CSS workflows
 

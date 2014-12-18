@@ -29,17 +29,37 @@ var ctor = module.exports = function (opts, cb) {
     var sassConfig = clone(sassOpts)
     sassConfig.file = entryPath
     sassConfig.data = null
-    sassConfig.success = bufferCss
-    sassConfig.error = fail
+    sassConfig.success = wrapSuccessFn(sassOpts.success)
+    sassConfig.error = wrapErrorFn(sassOpts.error)
     sassConfig.outputStyle = opts.compress ? 'compressed' : 'nested'
 
     sass.render(sassConfig);
+  }
+
+  function wrapErrorFn (errorOpt) {
+    return function (err) {
+      fail(err)
+
+      if (typeof errorOpt === 'function') {
+        errorOpt(err)
+      }
+    }
   }
 
   function fail (err) {
     console.log(err);
     error = err
     process.nextTick(function () {cb(err)})
+  }
+
+  function wrapSuccessFn (successOpt) {
+    return function (css) {
+      bufferCss(css)
+
+      if (typeof successOpt === 'function') {
+        successOpt(css)
+      }
+    }
   }
 
   function bufferCss (css) {
